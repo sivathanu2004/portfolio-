@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sivathanu — Computer Science &amp; Engineering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0B1220;
+    --panel: #121B2E;
+    --panel-2: #0F1729;
+    --line: rgba(143,166,201,0.16);
+    --teal: #4FD1C5;
+    --amber: #F2A65A;
+    --text: #E8EDF4;
+    --muted: #8B9AB3;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+  }
+  ::selection{ background:var(--teal); color:#08131a; }
+
+  /* faint grid backdrop, like a lightbox */
+  .grid-bg{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: radial-gradient(circle at 50% 20%, black, transparent 75%);
+    opacity:0.5;
+  }
+
+  .wrap{ position:relative; z-index:1; max-width:960px; margin:0 auto; padding:0 28px; }
+
+  header.hero{
+    padding:110px 0 90px;
+    border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--teal);
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:22px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:8px; height:8px; border-radius:50%;
+    background:var(--teal);
+    box-shadow:0 0 10px var(--teal);
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+
+  h1.name{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:clamp(44px,7vw,76px);
+    line-height:1.02;
+    margin:0 0 18px;
+    letter-spacing:-0.02em;
+  }
+  .name .accent{ color:var(--teal); }
+
+  .role{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:clamp(18px,2.4vw,24px);
+    color:var(--muted);
+    margin:0 0 30px;
+    max-width:560px;
+  }
+
+  .contact-row{
+    display:flex; flex-wrap:wrap; gap:14px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:14px;
+  }
+  .contact-row a{
+    color:var(--text);
+    text-decoration:none;
+    border:1px solid var(--line);
+    padding:9px 16px;
+    border-radius:2px;
+    transition: border-color .2s, color .2s, background .2s;
+  }
+  .contact-row a:hover, .contact-row a:focus-visible{
+    border-color:var(--teal);
+    color:var(--teal);
+    background:rgba(79,209,197,0.06);
+  }
+
+  section{ padding:74px 0; border-bottom:1px solid var(--line); }
+  section:last-of-type{ border-bottom:none; }
+
+  .section-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--amber);
+    margin:0 0 14px;
+  }
+  h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:clamp(26px,3.6vw,34px);
+    margin:0 0 26px;
+    font-weight:600;
+  }
+
+  .lede{ color:var(--muted); max-width:620px; font-size:17px; }
+
+  /* skills */
+  .skill-groups{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:26px; margin-top:30px; }
+  .skill-group h3{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--muted); margin:0 0 12px; font-weight:500;
+  }
+  .tag-row{ display:flex; flex-wrap:wrap; gap:8px; }
+  .tag{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    color:var(--text);
+    background:var(--panel);
+    border:1px solid var(--line);
+    padding:6px 12px;
+    border-radius:2px;
+  }
+
+  /* featured project - scan panel */
+  .scan-panel{
+    position:relative;
+    margin-top:34px;
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    border-radius:4px;
+    overflow:hidden;
+  }
+  .scan-visual{
+    position:relative;
+    height:220px;
+    background:
+      repeating-linear-gradient(180deg, rgba(79,209,197,0.05) 0px, rgba(79,209,197,0.05) 1px, transparent 1px, transparent 22px),
+      repeating-linear-gradient(90deg, rgba(79,209,197,0.05) 0px, rgba(79,209,197,0.05) 1px, transparent 1px, transparent 22px),
+      #0A1220;
+    border-bottom:1px solid var(--line);
+    overflow:hidden;
+  }
+  .scan-line{
+    position:absolute; left:0; right:0; height:2px;
+    background:linear-gradient(90deg, transparent, var(--teal), transparent);
+    box-shadow:0 0 16px 2px var(--teal);
+    animation: sweep 3.8s linear infinite;
+  }
+  @keyframes sweep{
+    0%{ top:0%; opacity:0; }
+    8%{ opacity:1; }
+    92%{ opacity:1; }
+    100%{ top:100%; opacity:0; }
+  }
+  .reticle{
+    position:absolute; width:64px; height:64px;
+    border:1px solid var(--amber);
+    border-radius:50%;
+    top:38%; left:58%;
+    opacity:0.85;
+  }
+  .reticle::before, .reticle::after{
+    content:""; position:absolute; background:var(--amber);
+  }
+  .reticle::before{ width:1px; height:14px; top:-18px; left:31px; }
+  .reticle::after{ width:14px; height:1px; left:-18px; top:31px; }
+  .scan-caption{
+    position:absolute; bottom:12px; left:16px;
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted);
+    letter-spacing:0.08em;
+  }
+
+  .project-body{ padding:28px 26px 30px; }
+  .project-title{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:22px; font-weight:600; margin:0 0 8px;
+  }
+  .project-stack{
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--teal);
+    margin:0 0 16px; letter-spacing:0.02em;
+  }
+  .project-body ul{ margin:0; padding-left:20px; color:var(--muted); }
+  .project-body li{ margin-bottom:8px; }
+  .project-body li::marker{ color:var(--teal); }
+
+  /* education */
+  .edu-row{
+    display:flex; justify-content:space-between; align-items:baseline;
+    flex-wrap:wrap; gap:8px; margin-top:6px;
+  }
+  .edu-degree{ font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:600; }
+  .edu-meta{ color:var(--muted); font-size:15px; margin-top:4px; }
+  .edu-year{
+    font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--amber);
+    border:1px solid var(--line); padding:5px 12px; border-radius:2px; white-space:nowrap;
+  }
+
+  footer{
+    padding:60px 0 80px;
+    text-align:center;
+  }
+  footer .cta{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:clamp(24px,4vw,32px);
+    font-weight:600;
+    margin:0 0 22px;
+  }
+  footer .cta .accent{ color:var(--teal); }
+  .foot-links{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+  .foot-links a{
+    font-family:'IBM Plex Mono',monospace; font-size:14px;
+    color:var(--text); text-decoration:none;
+    border-bottom:1px solid var(--line);
+    padding-bottom:2px;
+    transition:border-color .2s, color .2s;
+  }
+  .foot-links a:hover, .foot-links a:focus-visible{ color:var(--teal); border-color:var(--teal); }
+
+  @media (prefers-reduced-motion: reduce){
+    .scan-line, .eyebrow::before{ animation:none; }
+  }
+
+  a:focus-visible, .tag:focus-visible{ outline:2px solid var(--teal); outline-offset:2px; }
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">Available for entry-level roles &middot; graduating May 2026</div>
+    <h1 class="name">Sivathanu.K<span class="accent">.</span></h1>
+    <p class="role">Computer Science &amp; Engineering student building at the intersection of software fundamentals and applied deep learning.</p>
+    <div class="contact-row">
+      <a href="mailto:sivathanu2004@gmail.com">sivathanu2004@gmail.com</a>
+      <a href="tel:+919786195835">+91 97861 95835</a>
+      <span class="tag" style="background:none;">Padmanabhapuram, Kanniyakumari Dist.</span>
+    </div>
+  </header>
+
+  <section id="about">
+    <p class="section-label">01 — About</p>
+    <h2>Trained to read the signal in the noise.</h2>
+    <p class="lede">Final-year CSE student at Amrita College of Engineering and Technology, seeking a Project Associate role where I can apply technical and communication skills to real project execution. Comfortable across the stack — from HTML/CSS fundamentals and SQL to deep learning pipelines in PyTorch — with hands-on internship experience in data science and web development, and a particular interest in applying computer vision to real-world, high-stakes problems like medical diagnostics.</p>
+  </section>
+
+  <section id="skills">
+    <p class="section-label">02 — Skills</p>
+    <h2>Toolkit</h2>
+    <div class="skill-groups">
+      <div class="skill-group">
+        <h3>Languages</h3>
+        <div class="tag-row"><span class="tag">Python</span><span class="tag">SQL</span></div>
+      </div>
+      <div class="skill-group">
+        <h3>Web</h3>
+        <div class="tag-row"><span class="tag">HTML</span><span class="tag">CSS</span></div>
+      </div>
+      <div class="skill-group">
+        <h3>ML / Deep Learning</h3>
+        <div class="tag-row">
+          <span class="tag">PyTorch</span><span class="tag">OpenCV</span>
+          <span class="tag">CNN</span><span class="tag">Transfer Learning</span>
+          <span class="tag">Streamlit</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Productivity</h3>
+        <div class="tag-row"><span class="tag">MS Word</span><span class="tag">Excel</span><span class="tag">PowerPoint</span></div>
+      </div>
+      <div class="skill-group">
+        <h3>Communication</h3>
+        <div class="tag-row"><span class="tag">Professional English</span><span class="tag">Client Coordination</span><span class="tag">Documentation</span></div>
+      </div>
+      <div class="skill-group">
+        <h3>Strengths</h3>
+        <div class="tag-row"><span class="tag">Quick Learner</span><span class="tag">Team Collaboration</span><span class="tag">Adaptability</span><span class="tag">Problem Solving</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="internships">
+    <p class="section-label">03 — Internships</p>
+    <h2>Experience</h2>
+    <div class="skill-groups" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr));">
+      <div>
+        <div class="edu-row" style="margin-top:0;">
+          <div class="edu-degree" style="font-size:18px;">Data Science Intern (Python)</div>
+          <div class="edu-year">30 days</div>
+        </div>
+        <div class="edu-meta" style="margin-bottom:12px;">AK Infopark, Nagercoil</div>
+        <ul style="margin:0; padding-left:20px; color:var(--muted);">
+          <li style="margin-bottom:8px;">Analysed datasets using Pandas, NumPy &amp; Matplotlib.</li>
+          <li>Developed a machine learning classifier to predict student stress levels using Python.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="edu-row" style="margin-top:0;">
+          <div class="edu-degree" style="font-size:18px;">Web Development Intern</div>
+          <div class="edu-year">6 days</div>
+        </div>
+        <div class="edu-meta" style="margin-bottom:12px;">Ex Life Solution, Trivandrum</div>
+        <ul style="margin:0; padding-left:20px; color:var(--muted);">
+          <li style="margin-bottom:8px;">Developed responsive web pages using HTML and CSS.</li>
+          <li>Used Visual Studio Code for coding and debugging.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="project">
+    <p class="section-label">04 — Featured Project</p>
+    <h2>Early-Stage Pneumonia Detection</h2>
+    <p class="lede">A deep learning system that flags early-stage pneumonia from chest X-rays, built to make a diagnostic second opinion instantly accessible.</p>
+
+    <div class="scan-panel">
+      <div class="scan-visual">
+        <div class="scan-line"></div>
+        <div class="reticle"></div>
+        <div class="scan-caption">SCAN_FEED // CNN_INFERENCE.ACTIVE</div>
+      </div>
+      <div class="project-body">
+        <p class="project-title">Chest X-Ray Classifier &amp; Diagnostic Web App</p>
+        <p class="project-stack">Python · PyTorch · OpenCV · EfficientNet · GradCAM · Streamlit</p>
+        <ul>
+          <li>Built a CNN model using EfficientNet to detect early-stage pneumonia from chest X-ray images.</li>
+          <li>Applied transfer learning and lung segmentation to improve prediction accuracy, reaching 96% accuracy.</li>
+          <li>Implemented GradCAM for explainable AI visualization, highlighting the regions driving each prediction.</li>
+          <li>Deployed as an interactive Streamlit app where a user uploads an X-ray and receives a real-time prediction.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="education">
+    <p class="section-label">05 — Education</p>
+    <h2>Background</h2>
+    <div class="edu-row">
+      <div>
+        <div class="edu-degree">B.E. Computer Science &amp; Engineering</div>
+        <div class="edu-meta">Amrita College of Engineering and Technology, Nagercoil &middot; CGPA: 7.96</div>
+      </div>
+      <div class="edu-year">Expected May 2026</div>
+    </div>
+    <div class="edu-row" style="margin-top:26px; padding-top:20px; border-top:1px solid var(--line);">
+      <div>
+        <div class="edu-degree">Higher Secondary Certificate (HSC)</div>
+        <div class="edu-meta">Hindu Vidyalaya, Thuckalay &middot; 77.17%</div>
+      </div>
+      <div class="edu-year">2022</div>
+    </div>
+    <div class="edu-row" style="margin-top:26px; padding-top:20px; border-top:1px solid var(--line);">
+      <div>
+        <div class="edu-degree">Secondary School Leaving Certificate (SSLC)</div>
+        <div class="edu-meta">Hindu Vidyalaya, Thuckalay &middot; 72.60%</div>
+      </div>
+      <div class="edu-year">2020</div>
+    </div>
+  </section>
+
+  <footer>
+    <p class="cta">Let's build something<span class="accent">.</span></p>
+    <div class="foot-links">
+      <a href="mailto:sivathanu2004@gmail.com">Email me</a>
+      <a href="tel:+919786195835">Call me</a>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>
